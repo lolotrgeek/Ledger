@@ -5,7 +5,8 @@ class Chain {
     constructor() {
         this.blocks = []
         this.id = crypto.randomUUID()
-        this.log = message => process.send ? process.send(message) : console.log(message)
+        this.debug = false
+        this.log = message => this.debug ? process.send ? process.send(message) : console.log(message) : null
     }
 
     block(data) {
