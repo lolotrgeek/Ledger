@@ -10,5 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "lolotrgeek",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "zyre.js": "^1.2.2"
+  }
 }

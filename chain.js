@@ -14,15 +14,13 @@ class Chain {
     }
 
     put(data) {
-        if (data) {
-            let block = this.block(data)
-            this.blocks.push(block)
-            return block
-        }
+        let block = this.block(data)
+        this.blocks.push(block)
+        return block
     }
 
     get(key) {
-        if(key) return this.blocks.find(block => block.block_id === key)
+        if (key) return this.blocks.find(block => block.block_id === key)
     }
 
     validate() {
@@ -83,12 +81,19 @@ class Chain {
         this.blocks = updatedBlocks
     }
 
+
+    joinChains(A, B) {
+        const a = new Set(A.map(x => x.block_id))
+        const b = new Set(B.map(x => x.block_id))
+        return [...A.filter(x => !b.has(x.block_id)), ...B.filter(x => !a.has(x.block_id))]
+    }
+
     merge(chain) {
         if (this.isValid(this) === false) this.log("This Invalid", this)
         else if (this.isValid(chain) === false) this.log("Invalid", chain)
         else if (this.shouldMerge(chain) === false) this.log("No Merge", chain)
         else {
-            this.blocks = chain.blocks
+            this.blocks = this.joinChains(this.blocks , chain.blocks)
             this.id = chain.id
         }
     }
