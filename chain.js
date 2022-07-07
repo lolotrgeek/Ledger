@@ -14,7 +14,15 @@ class Chain {
     }
 
     put(data) {
-        if (data) this.blocks.push(this.block(data))
+        if (data) {
+            let block = this.block(data)
+            this.blocks.push(block)
+            return block
+        }
+    }
+
+    get(key) {
+        if(key) return this.blocks.find(block => block.block_id === key)
     }
 
     validate() {
@@ -51,7 +59,7 @@ class Chain {
 
     shouldMerge(chain) {
         if (this.isLonger(chain)) {
-            this.log(`Not Merging: this ${this.id} : ${this.blocks.length} longer than ${chain.id} : ${chain.blocks.length}`)
+            this.log(`Not Merging: this ${this.id} [${this.blocks.length}] longer than ${chain.id} [${chain.blocks.length}]`)
             return false
         }
         else if (this.isSameLength(chain) && this.isNewer(chain)) {
@@ -59,7 +67,7 @@ class Chain {
             return false
         }
         else {
-            this.log(`Merging: this ${this.id} : ${this.blocks.length} shorter than ${chain.id} : ${chain.blocks.length}`)
+            this.log(`Merging: ${this.id} [${this.blocks.length}] shorter than ${chain.id} : [${chain.blocks.length}]`)
             return true
         }
     }
@@ -85,6 +93,5 @@ class Chain {
         }
     }
 }
-
 
 module.exports = { Chain }
