@@ -55,33 +55,6 @@ class Chain {
         return this.blocks.length === chain.blocks.length
     }
 
-    shouldMerge_Deprecated(chain) {
-        if (this.isLonger(chain)) {
-            this.log(`Not Merging: this ${this.id} [${this.blocks.length}] longer than ${chain.id} [${chain.blocks.length}]`)
-            return false
-        }
-        else if (this.isSameLength(chain) && this.isNewer(chain)) {
-            this.log(`Not Merging: this ${this.id} newer than ${chain.id}`)
-            return false
-        }
-        else {
-            this.log(`Merging: ${this.id} [${this.blocks.length}] shorter than ${chain.id} : [${chain.blocks.length}]`)
-            return true
-        }
-    }
-
-    updateBlock(block, chain_id, index) {
-        block.chain_id = chain_id
-        block.name = index
-        return block
-    }
-
-    updateBlockIds(chain_id) {
-        let updatedBlocks = this.blocks.map((block, index) => this.updateBlock(block, chain_id, index))
-        this.blocks = updatedBlocks
-    }
-
-
     joinChains(A, B) {
         const a = new Set(A)
         const b = new Set(B)
