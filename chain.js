@@ -23,6 +23,10 @@ class Chain {
         if (key) return this.blocks.find(block => block.block_id === key)
     }
 
+    add(block) {
+        if(this.isBlock(block) && this.hasBlock(block) === false) this.blocks.push(block)
+    }
+
     validate() {
         return this.blocks.every(block => block.chain_id)
     }
@@ -33,6 +37,10 @@ class Chain {
 
     isBlock(data) {
         return typeof data === 'object' && data.chain_id && data.block_id && typeof data.time === 'number' && data
+    }
+
+    hasBlock(data) {
+        return this.blocks.find(block => block.block_id === data.block_id) ? true : false
     }
 
     isValid(chain) {
@@ -53,6 +61,20 @@ class Chain {
 
     isSameLength(chain) {
         return this.blocks.length === chain.blocks.length
+    }
+
+    mapBlocks() {
+        return this.blocks.map(block => block.block_id)
+    }
+
+    /**
+     * 
+     * @param {*} block_map 
+     * @returns the blocks that this chain does not have 
+     */
+    compareBlocks(block_map) {
+        const difference = (a, b) => b.filter(x => !a.includes(x))
+        return difference(this.mapBlocks(), block_map)
     }
 
     joinChains(A, B) {
