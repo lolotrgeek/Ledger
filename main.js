@@ -9,14 +9,37 @@ class Ledger {
     constructor(name) {
         this.name = name ? name : randomUUID()
         this.chain = new Chain()
-        this.node = new Node(name)
-        this.node.listen("ledger", (chain, name) => {
+        this.node = new Node(this.name)
+
+        // TODO: send/merge entire chain on connect??
+        // this.node.core.on("connect", (id, name, headers) => this.node.send({to:id}, this.chain, 1000))
+        // this.node.listen({from:""}, (chain ,id, name) => this.chain.merge(chain))
+        
+        // TODO: create an efficient way of slowly updating local chains.
+        // maybe add past blocks slowly over time?
+        // pass block maps?
+
+        this.node.listen("block", (block, name) => {
+            console.log("block!", block)
+            if (name !== this.name) this.chain.add(block)
+        })
+
+        this.node.listen("chain", (chain, name) => {
             if (name !== this.name) {
-                // console.log("heard chain", chain)
+                console.log(name, '->', this.name)
                 this.chain.merge(chain)
-                // this.node.send("ledger", this.chain, 1000)
             }
         })
+
+        this.node.listen("request", (key, name) => {
+            if (name !== this.name) {
+                let found = this.chain.blocks.slice().reverse().find(block => block.data.key === key)
+                if(found) this.node.send("block", found)
+            }
+        })
+
+
+
         this.errors = []
         this.retries = 3
         this.tries = 0
@@ -30,7 +53,7 @@ class Ledger {
      */
     put(key, value) {
         let block = this.chain.put({ key, value })
-        this.node.send("ledger", this.chain, 1000)
+        this.node.send("block", block)
         return block
     }
 
@@ -38,27 +61,26 @@ class Ledger {
      * Find the latest value of the given key.
      * @param {*} key 
      * @returns 
-     * @note using `findLast`, since we assume that the latest blocks hold the most updated data.
+     * @note we assume that the latest blocks hold the most updated data.
      */
     get(key) {
         try {
             let found = this.chain.blocks.slice().reverse().find(block => block.data.key === key)
-            if(found) {
+            if (found) {
                 this.tries = 0
                 console.log("found", found.data)
                 return found.data
             }
-            else if(!found && this.tries < this.retries) {
-                console.log('retrying...')
+            else if (!found && this.tries < this.retries) {
+                console.log('looking...')
                 this.tries++
-                this.node.send("ledger", this.chain)
-                setTimeout(() => this.get(key), this.tries * 1000)
-                // TODO: maybe promisify this, how else to speed up?
+                this.node.send("request", key) // NOTE: using this we do not need to have the entire chain, we can get blocks as needed.
+                setTimeout(() => this.get(key), this.tries * 500)
             }
             else {
                 return "unable to find."
             }
-            
+
         } catch (error) {
             this.errors.push(error)
         }
@@ -92,8 +114,8 @@ class Ledger {
                 latest.add(entry.key)
                 if (!isDuplicate) return true
                 return false
-              })
-            return latest_entries 
+            })
+            return latest_entries
         } catch (error) {
             this.errors.push(error)
         }
