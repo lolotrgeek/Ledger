@@ -17,6 +17,18 @@ class Node {
         }
     }
 
+    decode(data) {
+        try {
+            return JSON.parse(data)
+        } catch (error) {
+            return data
+        }
+    }
+
+    encode(data) {
+        return JSON.stringify(data)
+    }
+
     joined(channel) {
         return this.channels.find(joined_channel => joined_channel === channel)
     }
@@ -51,7 +63,7 @@ class Node {
      * @param {string} name  name of node that sent the message
      */
     listening(listener, channel, message, group, name) {
-        if (typeof listener === 'function' && group === channel) listener(message, name)
+        if (typeof listener === 'function' && group === channel) listener(this.decode(message), name)
     }
 
     /**
@@ -65,9 +77,10 @@ class Node {
         this.core.on("shout", (id, name, message, group) => this.listening(listener, channel, message, group, name))
     }
 
-    send(channel, message) {
-        if(typeof channel === 'object' && channel.to) this.core.whisper(channel.to, message)
-        this.core.shout(channel, message)
+    send(channel, message, timeout) {
+        if(typeof channel === 'object' && channel.to) this.core.whisper(channel.to, this.encode(message))
+        else if(typeof timeout === 'number') setTimeout(() => this.core.shout(channel, this.encode(message)), timeout)
+        else this.core.shout(channel, this.encode(message))
     }
 
 }
