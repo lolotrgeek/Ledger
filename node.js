@@ -46,7 +46,7 @@ class Node {
         })
     }
 
-    join_all(listener){
+    join_all(listener) {
         let groups = this.core.getGroups()
         for (let channel in groups) {
             this.join(channel)
@@ -72,14 +72,19 @@ class Node {
      * @param {function} listener `(message: string, name?: any)`
      */
     listen(channel, listener) {
-        if(channel === "*") this.join_all(listener)
-        else this.join(channel)
-        this.core.on("shout", (id, name, message, group) => this.listening(listener, channel, message, group, name))
+        if (typeof channel === 'object' && channel.from) {
+            this.core.on("whisper", (id, name, message) => this.listener(message, id, name))
+        }
+        else {
+            if (channel === "*") this.join_all(listener)
+            else this.join(channel)
+            this.core.on("shout", (id, name, message, group) => this.listening(listener, channel, message, group, name))
+        }
     }
 
     send(channel, message, timeout) {
-        if(typeof channel === 'object' && channel.to) this.core.whisper(channel.to, this.encode(message))
-        else if(typeof timeout === 'number') setTimeout(() => this.core.shout(channel, this.encode(message)), timeout)
+        if (typeof channel === 'object' && channel.to) this.core.whisper(channel.to, this.encode(message))
+        else if (typeof timeout === 'number') setTimeout(() => this.core.shout(channel, this.encode(message)), timeout)
         else this.core.shout(channel, this.encode(message))
     }
 
