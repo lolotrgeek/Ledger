@@ -55,7 +55,7 @@ class Chain {
         return this.blocks.length === chain.blocks.length
     }
 
-    shouldMerge(chain) {
+    shouldMerge_Deprecated(chain) {
         if (this.isLonger(chain)) {
             this.log(`Not Merging: this ${this.id} [${this.blocks.length}] longer than ${chain.id} [${chain.blocks.length}]`)
             return false
@@ -83,18 +83,39 @@ class Chain {
 
 
     joinChains(A, B) {
-        const a = new Set(A.map(x => x.block_id))
-        const b = new Set(B.map(x => x.block_id))
-        return [...A.filter(x => !b.has(x.block_id)), ...B.filter(x => !a.has(x.block_id))]
+        const a = new Set(A)
+        const b = new Set(B)
+        const _union = new Set(a)
+        for (const elem of b) { _union.add(elem) }
+        return [..._union]
     }
 
+    /**
+     * Merge the given chain, always assuming it has blocks we do not have, even if same ID
+     * @param {*} chain 
+     * @returns 
+     */
     merge(chain) {
-        if (this.isValid(this) === false) this.log("This Invalid", this)
-        else if (this.isValid(chain) === false) this.log("Invalid", chain)
-        else if (this.shouldMerge(chain) === false) this.log("No Merge", chain)
+        if (this.isValid(this) === false) {
+            this.log("This Invalid", this)
+            return false
+        }
+        else if (this.isValid(chain) === false) {
+            this.log("Invalid", chain)
+            return false
+        }
         else {
-            this.blocks = this.joinChains(this.blocks , chain.blocks)
-            this.id = chain.id
+            if (this.isLonger(chain) === false) {
+                this.id = chain.id
+                this.blocks = this.joinChains(chain.blocks, this.blocks)
+            }
+            else if (this.isSameLength(chain) && this.isNewer(chain) === false) {
+                this.id = chain.id
+                this.blocks = this.joinChains(chain.blocks, this.blocks)
+            }
+            else {
+                this.blocks = this.joinChains(this.blocks, chain.blocks)
+            }
         }
     }
 }
