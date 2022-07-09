@@ -72,7 +72,7 @@ class Chain {
      * @param {*} block_map 
      * @returns the blocks that this chain does not have 
      */
-    compareBlocks(block_map) {
+    compare(block_map) {
         const difference = (a, b) => b.filter(x => !a.includes(x))
         return difference(this.mapBlocks(), block_map)
     }
@@ -83,6 +83,13 @@ class Chain {
         const _union = new Set(a)
         for (const elem of b) { _union.add(elem) }
         return [..._union]
+    }
+
+    /**
+     * sort by smallest time is oldest, biggest time is newest
+     */
+    sortBlocks(blocks) {
+        return blocks.sort((a, b) => a.time - b.time)
     }
 
     /**
@@ -99,17 +106,18 @@ class Chain {
             this.log("Invalid", chain)
             return false
         }
+        // NOTE: Keep the following conditions, they resolve blocks that have the same `time`
         else {
             if (this.isLonger(chain) === false) {
                 this.id = chain.id
-                this.blocks = this.joinChains(chain.blocks, this.blocks)
+                this.blocks = this.sortBlocks(this.joinChains(chain.blocks, this.blocks))
             }
             else if (this.isSameLength(chain) && this.isNewer(chain) === false) {
                 this.id = chain.id
-                this.blocks = this.joinChains(chain.blocks, this.blocks)
+                this.blocks = this.sortBlocks(this.joinChains(chain.blocks, this.blocks))
             }
             else {
-                this.blocks = this.joinChains(this.blocks, chain.blocks)
+                this.blocks = this.sortBlocks(this.joinChains(this.blocks, chain.blocks))
             }
         }
     }
