@@ -11,14 +11,6 @@ class Ledger {
         this.chain = new Chain()
         this.node = new Node(this.name)
 
-        // TODO: send/merge entire chain on connect??
-        // this.node.core.on("connect", (id, name, headers) => this.node.send({to:id}, this.chain, 1000))
-        // this.node.listen({from:""}, (chain ,id, name) => this.chain.merge(chain))
-        
-        // TODO: create an efficient way of slowly updating local chains.
-        // maybe add past blocks slowly over time?
-        // pass block maps?
-
         this.node.listen("block", (block, name) => {
             console.log("block!", block)
             if (name !== this.name) this.chain.add(block)
@@ -34,9 +26,10 @@ class Ledger {
         this.node.listen("request", (key, name) => {
             if (name !== this.name) {
                 let found = this.chain.blocks.slice().reverse().find(block => block.data.key === key)
-                if(found) this.node.send("block", found)
+                if (found) this.node.send("block", found)
             }
         })
+
 
 
 

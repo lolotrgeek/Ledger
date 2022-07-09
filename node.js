@@ -68,7 +68,7 @@ class Node {
 
     /**
      * 
-     * @param {*} channel 
+     * @param {string | object} channel name of channel or `{from: ""}` to listen for requests
      * @param {function} listener `(message: string, name?: any)`
      */
     listen(channel, listener) {
@@ -82,6 +82,12 @@ class Node {
         }
     }
 
+    /**
+     * 
+     * @param {string | object} channel name of channel or `{to: id}`
+     * @param {*} message 
+     * @param {integer} [timeout] *optional* how long to wait before sending message
+     */
     send(channel, message, timeout) {
         if (typeof channel === 'object' && channel.to) this.core.whisper(channel.to, this.encode(message))
         else if (typeof timeout === 'number') setTimeout(() => this.core.shout(channel, this.encode(message)), timeout)
