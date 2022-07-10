@@ -1,5 +1,7 @@
 'use strict'
+const { timeStamp } = require('console')
 const crypto = require('crypto')
+const fs = require('fs')
 
 class Chain {
     constructor() {
@@ -7,6 +9,38 @@ class Chain {
         this.id = crypto.randomUUID()
         this.debug = false
         this.log = message => this.debug ? process.send ? process.send(message) : console.log(message) : null
+        this.errors = []
+        // this.file = `./${this.id}.json`
+        this.file = './chain.json'
+        try{fs.accessSync(this.file)}
+        catch{fs.writeFileSync(this.file, JSON.stringify(this.blocks))}
+    }
+
+    store(block) {
+        try {
+            fs.readFile(this.file, (err, data) => {
+                let stored_blocks = JSON.parse(data)
+                stored_blocks.push(block)
+                fs.writeFile(this.file, JSON.stringify(stored_blocks), error => this.errors.push(error))
+            })
+        } catch (error) {
+            this.errors.push(error)
+        }
+    }
+
+    retrieve(key_finder) {
+        try {
+            let stored_blocks = JSON.parse(fs.readFileSync(this.file))
+            let found = stored_blocks.find(block => key_finder(block))
+            return found
+        } catch (error) {
+            console.log(error)
+            this.errors.push(error)
+        }
+    }
+
+    prune() {
+        if (this.blocks.length === 5000) this.blocks.splice(0, 2500)
     }
 
     block(data) {
@@ -16,15 +50,22 @@ class Chain {
     put(data) {
         let block = this.block(data)
         this.blocks.push(block)
+        this.store(block)
+        this.prune()
         return block
     }
 
-    get(key) {
-        if (key) return this.blocks.find(block => block.block_id === key)
+    get(data) {
+        if (typeof data === 'object' && data.block_id) {
+            let found = this.blocks.find(block => block.block_id === data.block_id)
+            if(found) return found
+            else return this.retrieve(block => block.block_id === data.block_id)
+        }
+        else if(typeof data === 'function') return this.retrieve(data)
     }
 
     add(block) {
-        if(this.isBlock(block) && this.hasBlock(block) === false) this.blocks.push(block)
+        if (this.isBlock(block) && this.hasBlock(block) === false) this.blocks.push(block)
     }
 
     validate() {
