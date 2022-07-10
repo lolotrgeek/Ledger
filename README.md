@@ -1,29 +1,18 @@
-# Chain
-A non cryptographic distributed ledeger.
+# Ledger
+A non-cryptographic key/value distributed ledger.
 
 ## Usage
 
 Simple get/put interface.
 
 ```
-const { Chain } = require("basic-chain")
+const { Ledger } = require("basic-ledger")
 
-const chain = new Chain()
+const ledger = new Ledger()
 
-// insert data onto local chain
-let block = chain.put("data")
+ledger.put("key", "value")
 
-// retrieve data from local chain
-chain.get(block.block_id)
-
-
-```
-
-Merge two Chains
-```
-const chain = new Chain()
-const chain2 = new Chain()
-
-chain.merge(chain2)
+let value = chain.get("key")
+// -> "value"
 
 ```
