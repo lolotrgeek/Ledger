@@ -16,3 +16,6 @@ let value = chain.get("key")
 // -> "value"
 
 ```
+
+## Notes
+- may want to integrate chain merges, [here is a rough implementation](https://github.com/lolotrgeek/Chain/blob/networked-merge/main.js)
