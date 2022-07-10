@@ -1,5 +1,4 @@
 'use strict'
-const { timeStamp } = require('console')
 const crypto = require('crypto')
 const fs = require('fs')
 
