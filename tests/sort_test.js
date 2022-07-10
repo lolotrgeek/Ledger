@@ -1,20 +1,29 @@
 const { Chain } = require("../chain")
 
-// tests that the chains will merge, but resists self merging and duplication
+// tests that the chain can be sorted
 
 const chain1 = new Chain()
 
 chain1.debug = true
 
 let data1 = [1, 2, 3, 4]
-const promises = []
-data1.forEach(data => promises.push(new Promise(resolve => setTimeout(() => { chain1.put(data); resolve() }, 1000))))
+const promises = data1.map((data, i) => new Promise(resolve => setTimeout(() => { chain1.put(data); resolve() }, 100 * (i + 1) )))
 
-Promise.all(promises).then(() => {
-    let sorted = [...chain1.blocks].sort((a, b) => b.time - a.time)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
-    console.log("chain1", chain1.blocks)
+Promise.allSettled(promises).then(() => {
+    shuffleArray(chain1.blocks)
+    let sorted = chain1.sortBlocks([...chain1.blocks])
+
+    console.log("chain1 shuffled", chain1.blocks)
     console.log("chain1 sorted", sorted)
+
+    console.log("Pass:", JSON.stringify(sorted.map(block => block.data)) === JSON.stringify(data1))
 })
 
 
