@@ -16,13 +16,6 @@ class Ledger {
             if (name !== this.name) this.chain.add(block)
         })
 
-        this.node.listen("chain", (chain, name) => {
-            if (name !== this.name) {
-                console.log(name, '->', this.name)
-                this.chain.merge(chain)
-            }
-        })
-
         this.node.listen("request", (key, name) => {
             if (name !== this.name) {
                 let found = this.chain.blocks.slice().reverse().find(block => block.data.key === key)
@@ -30,11 +23,8 @@ class Ledger {
             }
         })
 
-
-
-
         this.errors = []
-        this.retries = 3
+        this.retries = 4
         this.tries = 0
     }
 
@@ -58,11 +48,17 @@ class Ledger {
      */
     get(key) {
         try {
-            let found = this.chain.blocks.slice().reverse().find(block => block.data.key === key)
+            let key_finder = block => block.data.key === key
+            let found = this.chain.blocks.slice().reverse().find(key_finder)
             if (found) {
                 this.tries = 0
                 console.log("found", found.data)
                 return found.data
+            }
+            else if(!found && this.tries === 0) {
+                let found_stored = this.chain.retrieve(key_finder)
+                if(found_stored) return found_stored.data
+                this.tries++
             }
             else if (!found && this.tries < this.retries) {
                 console.log('looking...')
@@ -73,7 +69,6 @@ class Ledger {
             else {
                 return "unable to find."
             }
-
         } catch (error) {
             this.errors.push(error)
         }

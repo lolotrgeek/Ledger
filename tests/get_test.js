@@ -1,7 +1,7 @@
 const { Chain } = require("../chain")
 const { data } = require('./data')
 
-// tests that the chains will merge, but resists self merging and duplication
+// tests using the chain as a key/vaue store with a custom get function
 
 const chain1 = new Chain()
 
