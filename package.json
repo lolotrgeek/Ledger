@@ -1,8 +1,8 @@
 {
-  "name": "basic-chain",
+  "name": "basic-ledger",
   "version": "0.0.1",
-  "description": "A basic blockchain.",
-  "main": "chain.js",
+  "description": "A non-cryptographic distributed ledger.",
+  "main": "main.js",
   "directories": {
     "test": "tests"
   },
