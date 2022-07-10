@@ -1,3 +1,4 @@
+'use strict'
 const Zyre = require('zyre.js')
 
 class Node {

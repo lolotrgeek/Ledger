@@ -1,3 +1,4 @@
+'use strict'
 const { randomUUID } = require('crypto')
 const { Chain } = require('./chain')
 const { Node } = require('./node')
