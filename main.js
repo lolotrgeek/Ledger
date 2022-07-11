@@ -11,9 +11,11 @@ class Ledger {
         this.name = name ? name : randomUUID()
         this.chain = new Chain()
         this.node = new Node(this.name)
+        this.debug = false
+        this.log = function() {if(debug) console.log(...Object.values(arguments))}
 
         this.node.listen("block", (block, name) => {
-            console.log("block!", block)
+            this.log(`Block! `)
             if (name !== this.name) this.chain.add(block)
         })
 
@@ -53,7 +55,7 @@ class Ledger {
             let found = this.chain.blocks.slice().reverse().find(key_finder)
             if (found) {
                 this.tries = 0
-                console.log("found", found.data)
+                this.log("found ", found.data)
                 return found.data
             }
             else if(!found && this.tries === 0) {
@@ -62,7 +64,7 @@ class Ledger {
                 this.tries++
             }
             else if (!found && this.tries < this.retries) {
-                console.log('looking...')
+                this.log('looking...')
                 this.tries++
                 this.node.send("request", key) // NOTE: using this we do not need to have the entire chain, we can get blocks as needed.
                 setTimeout(() => this.get(key), this.tries * 500)

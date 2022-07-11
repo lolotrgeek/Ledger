@@ -7,7 +7,7 @@ class Chain {
         this.blocks = []
         this.id = crypto.randomUUID()
         this.debug = false
-        this.log = message => this.debug ? process.send ? process.send(message) : console.log(message) : null
+        this.log = function() {if(debug) console.log(...Object.values(arguments))}
         this.errors = []
         // this.file = `./${this.id}.json`
         this.file = './chain.json'
