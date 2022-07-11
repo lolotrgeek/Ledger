@@ -12,7 +12,7 @@ class Ledger {
         this.chain = new Chain()
         this.node = new Node(this.name)
         this.debug = false
-        this.log = function() {if(debug) console.log(...Object.values(arguments))}
+        this.log = function() {if(this.debug) console.log(...Object.values(arguments))}
 
         this.node.listen("block", (block, name) => {
             this.log(`Block! `)
