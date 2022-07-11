@@ -1,4 +1,4 @@
-const { Chain } = require("../chain")
+const { Chain } = require("../src/chain")
 
 
 const chain1 = new Chain()

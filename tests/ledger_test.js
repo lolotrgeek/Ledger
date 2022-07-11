@@ -1,4 +1,4 @@
-const { Ledger } = require("../main")
+const { Ledger } = require("../src/ledger")
 
 
 // tests to see if we can add conflicting blocks to separte ledgers and still get the correct value

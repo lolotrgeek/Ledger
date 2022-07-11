@@ -1,4 +1,4 @@
-const { Chain } = require("../chain")
+const { Chain } = require("../src/chain")
 
 // tests that the chain can be sorted
 

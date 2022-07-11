@@ -1,4 +1,4 @@
-const { Chain } = require("../chain")
+const { Chain } = require("../src/chain")
 
 // tests that the chains will merge, but resists self merging and block duplication attacks
 
