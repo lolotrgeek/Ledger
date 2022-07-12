@@ -1,5 +1,5 @@
 const { Chain } = require("../src/chain")
-const { data } = require('./data')
+const { data } = require('./utils/data')
 
 // tests that the chains will merge, but resists self merging and duplication
 

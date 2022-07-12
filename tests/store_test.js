@@ -1,6 +1,5 @@
 const { Chain } = require("../src/chain")
 
-
 const chain1 = new Chain()
 let block = chain1.put("hello")
 chain1.blocks = []

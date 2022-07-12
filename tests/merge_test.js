@@ -26,9 +26,9 @@ const allEqual = arr => arr.every(val => val === arr[0])
 const valueMap = blocks => JSON.stringify(blocks.map(block => block.data))
 
 const test = () => {
-    console.log("chain3", chain3.blocks.map(block => block.data), chain3.id)
-    console.log("chain2", chain2.blocks.map(block => block.data), chain2.id)
-    console.log("chain1", chain1.blocks.map(block => block.data), chain1.id)
+    // console.log("chain3", chain3.blocks.map(block => block.data), chain3.id)
+    // console.log("chain2", chain2.blocks.map(block => block.data), chain2.id)
+    // console.log("chain1", chain1.blocks.map(block => block.data), chain1.id)
 
     let ids = [chain3.id, chain2.id, chain1.id]
     let chains = [valueMap(chain1.blocks), valueMap(chain2.blocks), valueMap(chain3.blocks)]

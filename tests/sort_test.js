@@ -20,8 +20,8 @@ Promise.allSettled(promises).then(() => {
     shuffleArray(chain1.blocks)
     let sorted = chain1.sortBlocks([...chain1.blocks])
 
-    console.log("chain1 shuffled", chain1.blocks)
-    console.log("chain1 sorted", sorted)
+    // console.log("chain1 shuffled", chain1.blocks)
+    // console.log("chain1 sorted", sorted)
 
     console.log("Pass:", JSON.stringify(sorted.map(block => block.data)) === JSON.stringify(data1))
 })
