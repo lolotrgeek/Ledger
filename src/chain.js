@@ -7,34 +7,38 @@ class Chain {
         this.blocks = []
         this.id = crypto.randomUUID()
         this.debug = false
-        this.log = function() {if(debug) console.log(...Object.values(arguments))}
         this.errors = []
-        // this.file = `./${this.id}.json`
-        this.file = './chain.json'
-        try{fs.accessSync(this.file)}
-        catch{fs.writeFileSync(this.file, JSON.stringify(this.blocks))}
+        this.file = `./${this.id}.json`
+        this.log = function () { if (this.debug) console.log(...Object.values(arguments)) }
+        this.handle = error =>{this.errors.push(error); this.log(error)}
+        try { fs.accessSync(this.file) }
+        catch { fs.writeFileSync(this.file, JSON.stringify(this.blocks)) }
     }
 
     store(block) {
         try {
-            fs.readFile(this.file, (err, data) => {
-                let stored_blocks = JSON.parse(data)
-                stored_blocks.push(block)
-                fs.writeFile(this.file, JSON.stringify(stored_blocks), error => this.errors.push(error))
-            })
+            let data = fs.readFileSync(this.file)
+            let stored_blocks = JSON.parse(data)
+            stored_blocks.push(block)
+            fs.writeFileSync(this.file, JSON.stringify(stored_blocks))
         } catch (error) {
-            this.errors.push(error)
+            this.handle(error)
         }
     }
 
+    /**
+     * Retrieve block(s) from local store.
+     * @param {function} [key_finder]  boolean function, returns true to find desired block
+     * @returns the found block or if no `key_finder` is given returns all blocks
+     */
     retrieve(key_finder) {
         try {
             let stored_blocks = JSON.parse(fs.readFileSync(this.file))
+            if (!key_finder) return stored_blocks
             let found = stored_blocks.find(block => key_finder(block))
             return found
         } catch (error) {
-            console.log(error)
-            this.errors.push(error)
+            this.handle(error)
         }
     }
 
@@ -47,24 +51,31 @@ class Chain {
     }
 
     put(data) {
-        let block = this.block(data)
-        this.blocks.push(block)
-        this.store(block)
-        this.prune()
-        return block
+        try {
+            let block = this.block(data)
+            this.blocks.push(block)
+            this.store(block)
+            this.prune()
+            return block
+        } catch (error) {
+            this.handle(error)
+        }
     }
 
     get(data) {
         if (typeof data === 'object' && data.block_id) {
             let found = this.blocks.find(block => block.block_id === data.block_id)
-            if(found) return found
+            if (found) return found
             else return this.retrieve(block => block.block_id === data.block_id)
         }
-        else if(typeof data === 'function') return this.retrieve(data)
+        else if (typeof data === 'function') return this.retrieve(data)
     }
 
     add(block) {
-        if (this.isBlock(block) && this.hasBlock(block) === false) this.blocks.push(block)
+        if (this.isBlock(block) && this.hasBlock(block) === false) {
+            this.store(block)
+            this.blocks.push(block)
+        }
     }
 
     validate() {

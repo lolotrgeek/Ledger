@@ -98,7 +98,7 @@ class Ledger {
      */
     get_all() {
         try {
-            const entries = this.chain.blocks.map(block => block.data).reverse()
+            const entries = this.chain.retrieve().map(block => block.data).reverse()
             const latest = new Set()
             const latest_entries = entries.filter(entry => {
                 const isDuplicate = latest.has(entry.key)
