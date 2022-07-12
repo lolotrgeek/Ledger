@@ -13,5 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "zyre.js": "^1.2.2"
+  },
+  "devDependencies": {
+    "test-runner": "github:lolotrgeek/test-runner"
   }
 }
