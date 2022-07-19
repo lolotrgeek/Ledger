@@ -19,3 +19,7 @@ let value = chain.get("key")
 
 ## Notes
 - may want to integrate chain merges, [here is a rough implementation](https://github.com/lolotrgeek/Chain/blob/networked-merge/main.js)
+
+
+## Todo
+- consider cleanup of stored test chains
