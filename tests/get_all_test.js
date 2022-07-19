@@ -1,29 +1,22 @@
-const { Chain } = require("../src/chain")
+const { Ledger } = require("../src/ledger")
 const { data } = require('./utils/data')
 
-// tests that the chains will merge, but resists self merging and duplication
+// tests that the ledger will get all entries
 
-const chain1 = new Chain()
+const ledger = new Ledger()
 
-chain1.debug = true
+data.forEach(datum => ledger.put(datum.key, datum.value))
 
-data.forEach(datum => chain1.put(datum))
+let tries = 0
+function test_get_all() {
+  if(tries > 4) return console.log("Pass:", false)
+  tries++
+  let test_find = ledger.get_all()
+  let test_dup = test_find.find(entry => entry.key === "Cyrus Sanders")
+  let test = test_find.length === 100 && test_dup.value === "No"
 
-function get_all() {
-    const entries = chain1.blocks.map(block => block.data).reverse()
-    const latest = new Set()
-    const latest_entries = entries.filter(entry => {
-        const isDuplicate = latest.has(entry.key)
-        latest.add(entry.key)
-        if (!isDuplicate) return true
-        return false
-      })
-    return latest_entries 
+  if(test === false) setTimeout(test_get_all, 500)
+  else console.log(test_find, "Pass:", test)
 }
 
-let test_find = get_all()
-let test_dup = test_find.find(entry => entry.key === "Cyrus Sanders")
-
-console.log(test_find, "Pass:", test_find.length === 100 && test_dup.value === "No")
-// console.log(dedup.length, store.length)
-
+test_get_all()
