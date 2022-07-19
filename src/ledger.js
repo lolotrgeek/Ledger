@@ -13,7 +13,7 @@ class Ledger {
      */
     constructor(name) {
         this.name = name ? name : randomUUID()
-        this.chain = new Chain()
+        this.chain = new Chain(this.name)
         this.node = new Node(this.name)
         this.debug = false
         this.log = function() {if(this.debug) console.log(...Object.values(arguments))}

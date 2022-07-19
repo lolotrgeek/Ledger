@@ -3,9 +3,9 @@ const crypto = require('crypto')
 const fs = require('fs')
 
 class Chain {
-    constructor() {
+    constructor(id) {
         this.blocks = []
-        this.id = crypto.randomUUID()
+        this.id = id ? id :crypto.randomUUID()
         this.debug = false
         this.errors = []
         this.file = `./${this.id}.json`
