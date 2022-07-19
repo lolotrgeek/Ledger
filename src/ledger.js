@@ -7,6 +7,10 @@ const { Node } = require('./node')
  * An immutable distributed key value store with eventual consistency.
  */
 class Ledger {
+    /**
+     * 
+     * @param {string} [name] 
+     */
     constructor(name) {
         this.name = name ? name : randomUUID()
         this.chain = new Chain()
@@ -94,7 +98,7 @@ class Ledger {
 
     /**
      * Retrieves all the latest entries.
-     * @returns 
+     * @returns {[{key, value} , ...]} An array of all keys/value pairs in the ledger
      */
     get_all() {
         try {
