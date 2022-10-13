@@ -1,7 +1,7 @@
 const { Ledger } = require("../src/ledger")
 const { data } = require('./utils/data')
 
-// tests that the ledger will get all entries
+// tests that the ledger will get all of the latest entries
 
 const ledger = new Ledger()
 
