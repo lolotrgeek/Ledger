@@ -1,5 +1,5 @@
-const { Ledger } = require(require.resolve('../src/ledger'))
-const { data } = require('./utils/data')
+import { Ledger }  from (require.resolve('../src/ledger'))
+import { data }  from ('./utils/data')
 
 // tests that the Ledgers will merge, but resists self merging and duplication
 

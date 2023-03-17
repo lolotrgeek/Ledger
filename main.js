@@ -1,3 +1,3 @@
-const { Ledger } = require("./src/ledger")
+import { Ledger }  from ("./src/ledger")
 
 module.exports = { Ledger }

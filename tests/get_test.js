@@ -1,5 +1,5 @@
-const { Chain } = require("../src/chain")
-const { data } = require('./utils/data')
+import { Chain }  from ("../src/chain")
+import { data }  from ('./utils/data')
 
 // tests using the chain as a key/vaue store with a custom get function
 

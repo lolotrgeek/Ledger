@@ -1,4 +1,4 @@
-const { Chain } = require("../src/chain")
+import { Chain }  from ("../src/chain")
 
 const chain1 = new Chain()
 let block = chain1.put("hello")

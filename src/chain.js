@@ -1,6 +1,6 @@
 'use strict'
-const crypto = require('crypto')
-const fs = require('fs')
+import crypto from 'crypto'
+import fs from 'fs'
 
 class Chain {
     constructor(id) {

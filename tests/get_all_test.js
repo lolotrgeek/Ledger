@@ -1,5 +1,5 @@
-const { Ledger } = require("../src/ledger")
-const { data } = require('./utils/data')
+import { Ledger }  from ("../src/ledger")
+import { data }  from ('./utils/data')
 
 // tests that the ledger will get all of the latest entries
 

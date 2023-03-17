@@ -1,7 +1,7 @@
 'use strict'
-const { randomUUID } = require('crypto')
-const { Chain } = require('./chain')
-const { Node } = require('basic-messaging')
+import { randomUUID } from 'crypto'
+import { Chain } from './chain'
+import { Node } from './node'
 
 /**
  * An immutable distributed key value store with eventual consistency.

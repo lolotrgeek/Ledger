@@ -1,3 +1,3 @@
-const {Run} = require('test-runner')
+import {Run} from 'test-runner'
 
 Run('./tests')

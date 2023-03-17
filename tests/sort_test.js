@@ -1,4 +1,4 @@
-const { Chain } = require("../src/chain")
+import { Chain }  from ("../src/chain")
 
 // tests that the chain can be sorted
 

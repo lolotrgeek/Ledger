@@ -6,7 +6,7 @@ A non-cryptographic key/value distributed ledger.
 Simple get/put interface.
 
 ```
-const { Ledger } = require("basic-ledger")
+import { Ledger }  from ("basic-ledger")
 
 const ledger = new Ledger()
 
